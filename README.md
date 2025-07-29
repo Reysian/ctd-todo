@@ -1,4 +1,4 @@
-# Week 01 Assignment: CTD Todo App
+# CTD Todo App
 
 **CTD Todo App** renders a title and an unordered list of todos using React and Vite.
 
