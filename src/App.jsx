@@ -2,6 +2,7 @@ import './App.css';
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm';
+import styles from './App.module.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
@@ -212,8 +213,8 @@ function App() {
   };
 
   return (
-    <div>
-      <h1>To-do list</h1>
+    <div className={styles.appBody}>
+      <h1 className={styles.header}>To-do list</h1>
       <TodoForm
         onAddTodo={addTodo}
         isSaving={isSaving}
@@ -235,7 +236,7 @@ function App() {
         setQueryString={setQueryString}
       />
       {errorMessage && (
-        <div>
+        <div className={styles.error}>
           <hr />
           <p>{errorMessage}</p>
           <button onClick={() => setErrorMessage('')}>Dismiss</button>

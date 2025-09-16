@@ -1,0 +1,22 @@
+.appBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+    background-color:#add8e6;
+    border: 2px dotted darkblue;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+.header {
+  color: darkblue;
+  text-align: center;
+}
+
+.error {
+    background-color:rgb(236, 186, 186);
+    border: 2px dotted indianred;
+    border-radius: 5px;
+}
