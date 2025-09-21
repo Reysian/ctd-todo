@@ -1,66 +1,102 @@
 const initialState = {
-    todoList: [],
-    isLoading: false,
-    isSaving: false,
-    errorMessage: '',
+  todoList: [],
+  isLoading: false,
+  isSaving: false,
+  errorMessage: '',
 };
 
 const actions = {
-    fetchTodos: 'fetchTodos',
-    loadTodos: 'loadTodos',
-    setLoadError: 'setLoadError',
-    startRequest: 'startRequest',
-    addTodo: 'addTodo',
-    endRequest: 'endRequest',
-    updateTodo: 'updateTodo',
-    completeTodo: 'completeTodo',
-    revertTodo: 'revertTodo',
-    clearError: 'clearError',
+  fetchTodos: 'fetchTodos',
+  loadTodos: 'loadTodos',
+  setLoadError: 'setLoadError',
+  startRequest: 'startRequest',
+  addTodo: 'addTodo',
+  endRequest: 'endRequest',
+  updateTodo: 'updateTodo',
+  completeTodo: 'completeTodo',
+  revertTodo: 'revertTodo',
+  clearError: 'clearError',
 };
 
 function reducer(state = initialState, action) {
-    switch (action.type) {
-        case actions.fetchTodos:
-            return {
-                ...state
-            };
-        case actions.loadTodos:
-            return {
-                ...state
-            };
-        case actions.setLoadError:
-            return {
-                ...state
-            };
-        case actions.startRequest:
-            return {
-                ...state
-            };
-        case actions.addTodo:
-            return {
-                ...state
-            };
-        case actions.endRequest:
-            return {
-                ...state
-            };
-        case actions.updateTodo:
-            return {
-                ...state
-            };
-        case actions.completeTodo:
-            return {
-                ...state
-            };
-        case actions.revertTodo:
-            return {
-                ...state
-            };
-        case actions.clearError:
-            return {
-                ...state
-            };
-    }
+  switch (action.type) {
+    case actions.fetchTodos:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case actions.loadTodos:
+      const fetchedTodos = action.records.map((record) => {
+        const todo = {
+          id: record.id,
+          ...record.fields,
+        };
+        if (!todo.isCompleted) {
+          todo.isCompleted = false;
+        }
+        return todo;
+      });
+      return {
+        ...state,
+        todoList: fetchedTodos,
+        isLoading: false,
+      };
+    case actions.setLoadError:
+      return {
+        ...state,
+        errorMessage: action.error.message,
+        isLoading: false,
+      };
+    case actions.startRequest:
+      return {
+        ...state,
+        isSaving: true,
+      };
+    case actions.addTodo:
+      const savedTodo = {
+        id: action.records[0].id,
+        ...action.records[0].fields,
+      };
+
+      if (!action.records[0].fields.isCompleted) {
+        savedTodo.isCompleted = false;
+      }
+
+      return {
+        ...state,
+        todoList: [...state.todoList, savedTodo],
+        isSaving: false,
+      };
+    case actions.endRequest:
+      return {
+        ...state,
+        isLoading: false,
+        isSaving: false,
+      };
+    case actions.revertTodo:
+    case actions.updateTodo:
+      const updatedTodos = state.todoList.map((todo) =>
+        todo.id === action.editedTodo.id ? { ...action.editedTodo } : todo
+      );
+      const updatedState = { ...state, todoList: updatedTodos };
+      if (action.error) {
+        updatedState = { ...updatedState, errorMessage: action.error.message };
+      }
+      return updatedState;
+    case actions.completeTodo:
+      updatedTodos = todoList.map((todo) =>
+        todo.id === action.id ? { ...todo, isCompleted: true } : todo
+      );
+      return {
+        ...state,
+        todoList: [...updatedTodos],
+      };
+    case actions.clearError:
+      return {
+        ...state,
+        errorMessage: '',
+      };
+  }
 }
 
 export { reducer, initialState, actions };

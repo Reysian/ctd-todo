@@ -6,6 +6,12 @@ import styles from './App.module.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
+import { useReducer } from 'react';
+import {
+  reducer as todosReducer,
+  actions as todoActions,
+  initialState as initialTodosState,
+} from './reducers/todos.reducer';
 
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 
@@ -18,6 +24,7 @@ function App() {
   const [sortDirection, setSortDirection] = useState('desc');
   const [queryString, setQueryString] = useState('');
 
+  const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
   
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
@@ -49,6 +56,8 @@ function App() {
           throw new Error(resp.message);
         }
         const todosData = await resp.json();
+
+        //To be moved to reducer under loadTodos
         const fetchedTodos = todosData.records.map((record) => {
           const todo = {
             id: record.id,
@@ -59,6 +68,7 @@ function App() {
           }
           return todo;
         });
+        //End of loadTodos
         setTodoList([...fetchedTodos]);
       } catch (error) {
         setErrorMessage(error.message);
@@ -100,7 +110,7 @@ function App() {
         throw new Error(resp.message);
       }
       const { records } = await resp.json();
-
+      //To be moved to reducer under addTodo
       const savedTodo = {
         id: records[0].id,
         ...records[0].fields,
@@ -111,6 +121,7 @@ function App() {
       }
 
       setTodoList([...todoList, savedTodo]);
+      //End addTodo
     } catch (error) {
       console.log(error);
       setErrorMessage(error.message);
@@ -122,11 +133,12 @@ function App() {
   const completeTodo = async (id) => {
     const originalTodo = todoList.find((todo) => todo.id === id);
 
+    //To be moved to reducer under completeTodo
     const updatedTodos = todoList.map((todo) =>
       todo.id === id ? { ...todo, isCompleted: true } : todo
     );
     setTodoList(updatedTodos);
-
+    //End of completeTodo
     const payload = {
       records: [
         {
@@ -156,10 +168,12 @@ function App() {
     } catch (error) {
       console.log(error);
       setErrorMessage(`${error.message}. Reverting todo...`)
+      //To be moved to reducer under revertTodo
       const revertedTodos = todoList.map((todo) =>
         todo.id === originalTodo.id ? { ...originalTodo } : todo
       );
       setTodoList([...revertedTodos]);
+      //End of revertTodo
     } finally {
       setIsSaving(false);
     }
@@ -167,13 +181,15 @@ function App() {
   };
 
   const updateTodo = async (editedTodo) => {
+
     const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
 
+    //To be moved to reducer under updateTodo
     const updatedTodos = todoList.map((todo) =>
       todo.id === editedTodo.id ? { ...editedTodo } : todo
     );
     setTodoList(updatedTodos);
-
+    //End of updateTodo
     const payload = {
       records: [
         {
