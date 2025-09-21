@@ -84,12 +84,12 @@ function reducer(state = initialState, action) {
       }
       return updatedState;
     case actions.completeTodo:
-      updatedTodos = todoList.map((todo) =>
+      const updatedTodos2 = state.todoList.map((todo) =>
         todo.id === action.id ? { ...todo, isCompleted: true } : todo
       );
       return {
         ...state,
-        todoList: [...updatedTodos],
+        todoList: [...updatedTodos2],
       };
     case actions.clearError:
       return {

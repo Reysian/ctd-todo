@@ -57,9 +57,8 @@ function App() {
         }
         const todosData = await resp.json();
 
-        //To be moved to reducer under loadTodos
         dispatch({ type: todoActions.loadTodos, records: todosData.records});
-        //End of loadTodos
+
       } catch (error) {
         dispatch({ type: todoActions.setLoadError, error: error});
       } finally {
@@ -111,7 +110,7 @@ function App() {
   };
 
   const completeTodo = async (id) => {
-    const originalTodo = todoList.find((todo) => todo.id === id);
+    const originalTodo = todoState.todoList.find((todo) => todo.id === id);
 
     dispatch({ type: todoActions.completeTodo, id: id });
 
@@ -153,7 +152,7 @@ function App() {
 
   const updateTodo = async (editedTodo) => {
 
-    const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
+    const originalTodo = todoState.todoList.find((todo) => todo.id === editedTodo.id);
 
     dispatch({ type: todoActions.updateTodo, editedTodo: editedTodo });
     
@@ -201,7 +200,7 @@ function App() {
         setIsSaving={todoState.isSaving}
       />
       <TodoList
-        todoList={todoList}
+        todoList={todoState.todoList}
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
         isLoading={todoState.isLoading}
@@ -215,10 +214,10 @@ function App() {
         queryString={queryString}
         setQueryString={setQueryString}
       />
-      {errorMessage && (
+      {todoState.errorMessage && (
         <div className={styles.error}>
           <hr />
-          <p>{errorMessage}</p>
+          <p>{todoState.errorMessage}</p>
           <button onClick={dispatch({ type: actions.clearError })}>Dismiss</button>
         </div>
       )}
