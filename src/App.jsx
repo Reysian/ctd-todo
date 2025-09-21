@@ -60,12 +60,10 @@ function App() {
         //To be moved to reducer under loadTodos
         dispatch({ type: todoActions.loadTodos, records: todosData.records});
         //End of loadTodos
-        console.log(isLoading);
       } catch (error) {
-        setErrorMessage(error.message);
+        dispatch({ type: todoActions.setLoadError, error: error});
       } finally {
         console.log('fetch complete');
-        setIsLoading(false);
       }
     };
     console.log('useEffect has run');
@@ -95,41 +93,28 @@ function App() {
     };
 
     try {
-      setIsSaving(true);
+      dispatch({ type: todoActions.startRequest });
       const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error(resp.message);
       }
       const { records } = await resp.json();
-      //To be moved to reducer under addTodo
-      const savedTodo = {
-        id: records[0].id,
-        ...records[0].fields,
-      };
-
-      if (!records[0].fields.isCompleted) {
-        savedTodo.isCompleted = false;
-      }
-
-      setTodoList([...todoList, savedTodo]);
-      //End addTodo
+      
+      dispatch({ type: todoActions.addTodo, records: records });
+      
     } catch (error) {
       console.log(error);
-      setErrorMessage(error.message);
+      dispatch({ type: todoActions.setLoadError, error: error });
     } finally {
-      setIsSaving(false);
+      dispatch({ type: todoActions.endRequest });
     }
   };
 
   const completeTodo = async (id) => {
     const originalTodo = todoList.find((todo) => todo.id === id);
 
-    //To be moved to reducer under completeTodo
-    const updatedTodos = todoList.map((todo) =>
-      todo.id === id ? { ...todo, isCompleted: true } : todo
-    );
-    setTodoList(updatedTodos);
-    //End of completeTodo
+    dispatch({ type: todoActions.completeTodo, id: id });
+
     const payload = {
       records: [
         {
@@ -158,15 +143,10 @@ function App() {
       }
     } catch (error) {
       console.log(error);
-      setErrorMessage(`${error.message}. Reverting todo...`)
-      //To be moved to reducer under revertTodo
-      const revertedTodos = todoList.map((todo) =>
-        todo.id === originalTodo.id ? { ...originalTodo } : todo
-      );
-      setTodoList([...revertedTodos]);
-      //End of revertTodo
+      dispatch({ type: todoActions.setLoadError, error: error });
+      dispatch({ type: todoActions.revertTodo, editedTodo: originalTodo });
     } finally {
-      setIsSaving(false);
+      dispatch({ type: todoActions.endRequest });
     }
 
   };
@@ -175,12 +155,8 @@ function App() {
 
     const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
 
-    //To be moved to reducer under updateTodo
-    const updatedTodos = todoList.map((todo) =>
-      todo.id === editedTodo.id ? { ...editedTodo } : todo
-    );
-    setTodoList(updatedTodos);
-    //End of updateTodo
+    dispatch({ type: todoActions.updateTodo, editedTodo: editedTodo });
+    
     const payload = {
       records: [
         {
@@ -209,13 +185,10 @@ function App() {
       }
     } catch (error) {
       console.log(error);
-      setErrorMessage(`${error.message}. Reverting todo...`)
-      const revertedTodos = todoList.map((todo) =>
-        todo.id === originalTodo.id ? { ...originalTodo } : todo
-      );
-      setTodoList([...revertedTodos]);
+      dispatch({ type: todoActions.setLoadError, error: error });
+      dispatch({ type: todoActions.revertTodo, editedTodo: originalTodo });
     } finally {
-      setIsSaving(false);
+      dispatch({ type: todoActions.endRequest });
     }
   };
 
@@ -223,15 +196,15 @@ function App() {
     <div className={styles.appBody}>
       <h1 className={styles.header}>To-do list</h1>
       <TodoForm
-        onAddTodo={addTodo}
-        isSaving={isSaving}
-        setIsSaving={setIsSaving}
+        onAddTodo={todoState.addTodo}
+        isSaving={todoState.isSaving}
+        setIsSaving={todoState.isSaving}
       />
       <TodoList
         todoList={todoList}
-        onCompleteTodo={completeTodo}
-        onUpdateTodo={updateTodo}
-        isLoading={isLoading}
+        onCompleteTodo={todoState.completeTodo}
+        onUpdateTodo={todoState.updateTodo}
+        isLoading={todoState.isLoading}
       />
       <hr />
       <TodosViewForm
@@ -246,7 +219,7 @@ function App() {
         <div className={styles.error}>
           <hr />
           <p>{errorMessage}</p>
-          <button onClick={() => setErrorMessage('')}>Dismiss</button>
+          <button onClick={dispatch({ type: actions.clearError })}>Dismiss</button>
         </div>
       )}
     </div>

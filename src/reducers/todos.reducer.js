@@ -36,7 +36,6 @@ function reducer(state = initialState, action) {
         }
         return todo;
       });
-      console.log(...fetchedTodos);
       return {
         ...state,
         todoList: fetchedTodos,
