@@ -2,6 +2,31 @@ import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 
+const StyledButton = styled.button`
+  text-align: center;
+  margin: 2px;
+  border: 1px solid gray;
+  border-radius: 3px;
+  &:hover {
+    background-color: lightblue;
+  }
+  &:active {
+    background-color: lightgreen;
+  }
+`;
+
+const StyledInput = styled.input`
+  margin: 2px;
+  border: 1px solid gray;
+  border-radius: 3px;
+`;
+
+const StyledSelect = styled.select`
+  margin: 4px;
+  border: 1px solid gray;
+  border-radius: 3px;
+`;
+
 function TodosViewForm({ sortDirection, setSortDirection, sortField, setSortField, queryString, setQueryString }) {
   
   const [localQueryString, setLocalQueryString] = useState(queryString);
@@ -21,31 +46,6 @@ function TodosViewForm({ sortDirection, setSortDirection, sortField, setSortFiel
   const preventRefresh = (event) => {
     event.preventDefault();
   };
-
-  const StyledButton = styled.button`
-    text-align: center;
-    margin: 2px;
-    border: 1px solid gray;
-    border-radius: 3px;
-    &:hover {
-      background-color: lightblue;
-    }
-    &:active {
-      background-color: lightgreen;
-    }
-  `;
-
-  const StyledInput = styled.input`
-    margin: 2px;
-    border: 1px solid gray;
-    border-radius: 3px;
-  `;
-
-  const StyledSelect = styled.select`
-    margin: 4px;
-    border: 1px solid gray;
-    border-radius: 3px;
-  `;
 
   return (
     <form onSubmit={(event) => preventRefresh(event)}>
