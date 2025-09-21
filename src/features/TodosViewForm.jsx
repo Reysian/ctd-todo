@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import styled from "styled-components";
 
 function TodosViewForm({ sortDirection, setSortDirection, sortField, setSortField, queryString, setQueryString }) {
   
@@ -21,24 +22,49 @@ function TodosViewForm({ sortDirection, setSortDirection, sortField, setSortFiel
     event.preventDefault();
   };
 
+  const StyledButton = styled.button`
+    text-align: center;
+    margin: 2px;
+    border: 1px solid gray;
+    border-radius: 3px;
+    &:hover {
+      background-color: lightblue;
+    }
+    &:active {
+      background-color: lightgreen;
+    }
+  `;
+
+  const StyledInput = styled.input`
+    margin: 2px;
+    border: 1px solid gray;
+    border-radius: 3px;
+  `;
+
+  const StyledSelect = styled.select`
+    margin: 4px;
+    border: 1px solid gray;
+    border-radius: 3px;
+  `;
+
   return (
     <form onSubmit={(event) => preventRefresh(event)}>
       <div>
         <label>Search todos:</label>
-        <input type="text" value={localQueryString} onChange={(e) => {setLocalQueryString(e.target.value)}}></input>
-        <button type="button" onClick={() => setLocalQueryString('')}>Clear</button>
+        <StyledInput type="text" value={localQueryString} onChange={(e) => {setLocalQueryString(e.target.value)}}></StyledInput>
+        <StyledButton type="button" onClick={() => setLocalQueryString('')}>Clear</StyledButton>
       </div>
       <div>
         <label>Sort by</label>
-        <select value={sortField} onChange={(event) => setSortField(event.target.value)}>
+        <StyledSelect value={sortField} onChange={(event) => setSortField(event.target.value)}>
           <option value="title">Title</option>
           <option value="createdTime">Time added</option>
-        </select>
+        </StyledSelect>
         <label>Direction</label>
-        <select value={sortDirection} onChange={(event) => setSortDirection(event.target.value)}>
+        <StyledSelect value={sortDirection} onChange={(event) => setSortDirection(event.target.value)}>
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
-        </select>
+        </StyledSelect>
       </div>
     </form>
   );
