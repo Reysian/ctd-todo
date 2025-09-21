@@ -58,18 +58,9 @@ function App() {
         const todosData = await resp.json();
 
         //To be moved to reducer under loadTodos
-        const fetchedTodos = todosData.records.map((record) => {
-          const todo = {
-            id: record.id,
-            ...record.fields,
-          };
-          if (!todo.isCompleted) {
-            todo.isCompleted = false;
-          }
-          return todo;
-        });
+        dispatch({ type: todoActions.loadTodos, records: todosData.records});
         //End of loadTodos
-        setTodoList([...fetchedTodos]);
+        console.log(isLoading);
       } catch (error) {
         setErrorMessage(error.message);
       } finally {
