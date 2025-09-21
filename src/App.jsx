@@ -196,14 +196,14 @@ function App() {
     <div className={styles.appBody}>
       <h1 className={styles.header}>To-do list</h1>
       <TodoForm
-        onAddTodo={todoState.addTodo}
+        onAddTodo={addTodo}
         isSaving={todoState.isSaving}
         setIsSaving={todoState.isSaving}
       />
       <TodoList
         todoList={todoList}
-        onCompleteTodo={todoState.completeTodo}
-        onUpdateTodo={todoState.updateTodo}
+        onCompleteTodo={completeTodo}
+        onUpdateTodo={updateTodo}
         isLoading={todoState.isLoading}
       />
       <hr />
