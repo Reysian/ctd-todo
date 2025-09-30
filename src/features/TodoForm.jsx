@@ -3,6 +3,22 @@ import { useState } from "react";
 import TextInputWithLabel from "../shared/TextInputWithLabel";
 import styled from "styled-components";
 
+const StyledButton = styled.button`
+  text-align: center;
+  margin: 2px;
+  border: 1px solid gray;
+  border-radius: 3px;
+  &:disabled {
+    font-style: italic;
+  }
+  &:hover {
+    background-color: lightblue;
+  }
+  &:active {
+    background-color: lightgreen;
+  }
+`;
+
 function TodoForm({ onAddTodo, isSaving, setIsSaving }) {
 
   const todoTitleInput = useRef(document.querySelector("#todoTitle"));
@@ -14,22 +30,6 @@ function TodoForm({ onAddTodo, isSaving, setIsSaving }) {
     setWorkingTodoTitle("")
     todoTitleInput.current.focus();
   }
-
-  const StyledButton = styled.button`
-    text-align: center;
-    margin: 2px;
-    border: 1px solid gray;
-    border-radius: 3px;
-    &:disabled {
-      font-style: italic;
-    }
-    &:hover {
-      background-color: lightblue;
-    }
-    &:active {
-      background-color: lightgreen;
-    }
-  `;
 
   return (
     <form onSubmit={handleAddTodo}>
