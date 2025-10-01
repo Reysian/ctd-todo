@@ -19,7 +19,7 @@ const StyledButton = styled.button`
   }
 `;
 
-function TodoForm({ onAddTodo, isSaving, setIsSaving }) {
+function TodoForm({ onAddTodo, isSaving }) {
 
   const todoTitleInput = useRef(document.querySelector("#todoTitle"));
   const [workingTodoTitle, setWorkingTodoTitle] = useState("");

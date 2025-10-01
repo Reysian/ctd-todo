@@ -1,5 +1,25 @@
 .list {
-    list-style: none;
-    padding: 0px;
-    margin-top: 4px;
+  list-style: none;
+  padding: 0px;
+  margin-top: 4px;
+}
+
+.paginationControls {
+  display: flex;
+  flex-direction: row;
+  width: 50px;
+  justify-content: space-between;
+}
+
+button {
+  text-align: center;
+  margin: 5px;
+  border: 1px solid gray;
+  border-radius: 3px;
+  &:hover {
+    background-color: lightblue;
+  }
+  &:active {
+    background-color: lightgreen;
+  }
 }

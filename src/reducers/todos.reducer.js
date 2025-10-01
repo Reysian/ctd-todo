@@ -78,7 +78,7 @@ function reducer(state = initialState, action) {
       const updatedTodos = state.todoList.map((todo) =>
         todo.id === action.editedTodo.id ? { ...action.editedTodo } : todo
       );
-      const updatedState = { ...state, todoList: updatedTodos };
+      let updatedState = { ...state, todoList: updatedTodos };
       if (action.error) {
         updatedState = { ...updatedState, errorMessage: action.error.message };
       }
